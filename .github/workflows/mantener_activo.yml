@@ -1,0 +1,27 @@
+name: Despertador Automatico Streamlit
+
+on:
+  schedule:
+    # Se ejecuta automáticamente cada 2 horas
+    - cron: '0 */2 * * *'
+  workflow_dispatch: # Agrega un botón en GitHub para ejecutarlo manualmente si lo deseas
+
+jobs:
+  wake-streamlit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener código del repositorio
+        uses: actions/checkout@v3
+
+      - name: Configurar Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Instalar Playwright y dependencias
+        run: |
+          pip install playwright
+          playwright install chromium
+
+      - name: Ejecutar navegador automatizado
+        run: python keep_alive.py
