@@ -19,7 +19,7 @@ async def despertar_apps():
         browser = await p.chromium.launch(headless=True)
         page = await browser.new_page()
         
-        for url in APPS:
+        for i, url in enumerate(APPS):
             try:
                 print(f"Visitando: {url}")
                 await page.goto(url, timeout=60000)
@@ -38,6 +38,12 @@ async def despertar_apps():
                     
             except Exception as e:
                 print(f"Error al procesar {url}: {e}")
+            
+            # Espaciado de 5 minutos (300 segundos) entre aplicaciones
+            # La condición evita que espere 5 minutos innecesarios después de la última app
+            if i < len(APPS) - 1:
+                print("Esperando 5 minutos (300 segundos) antes de la siguiente app...")
+                await asyncio.sleep(300)
                 
         await browser.close()
 

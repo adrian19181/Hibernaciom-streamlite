@@ -2,13 +2,14 @@ name: Despertador Automatico Streamlit
 
 on:
   schedule:
-    # Se ejecuta automáticamente cada 2 horas
-    - cron: '0 */2 * * *'
+    # Se ejecuta automáticamente cada 3 horas
+    - cron: '0 */3 * * *'
   workflow_dispatch: # Agrega un botón en GitHub para ejecutarlo manualmente si lo deseas
 
 jobs:
   wake-streamlit:
     runs-on: ubuntu-latest
+    timeout-minutes: 60 # Extendido para soportar los 35+ minutos que dura el script con las pausas
     steps:
       - name: Obtener código del repositorio
         uses: actions/checkout@v3
