@@ -1,12 +1,13 @@
 import asyncio
 from playwright.async_api import async_playwright
 
-# Enlaces directos a tus 8 aplicaciones de Streamlit
+# Enlaces directos a tus 9 aplicaciones de Streamlit
 APPS = [
     "https://ahorro-programado-jardin-2025-2026-lpkqxauhd6ubq2tdwgm8up.streamlit.app/",
     "https://ahorro-programado-jardin-2026---2027-jvgnnbjed5rrmeprxhrf4k.streamlit.app/",
     "https://calculadorasueldo-658v3aazzcta5b5x6gk2mk.streamlit.app/",
     "https://comparacion-ahorros-programados-mjaaaegmw4wzwlupfcohxe.streamlit.app/",
+    "https://inversiones-hwebbwqbakg4khbdvsq7qz.streamlit.app/",
     "https://pago-tarjetas-8ygjpcq3wus8pxf7g7arzr.streamlit.app/",
     "https://programado-jardin-2024-2025-h86a7ezvhkp2w6lthjp9k9.streamlit.app/",
     "https://sueldo-a49pjsdwr5bjzgzhn6zxqm.streamlit.app/",
