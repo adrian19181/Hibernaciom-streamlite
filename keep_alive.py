@@ -44,11 +44,11 @@ async def despertar_apps():
             except Exception as e:
                 print(f"Error al procesar {url}: {e}")
             
-            # Espaciado de 5 minutos (300 segundos) entre aplicaciones
-            # La condición evita que espere 5 minutos innecesarios después de la última app
+            # Espaciado de 2 minutos (120 segundos) entre aplicaciones
+            # La condición evita que espere 2 minutos innecesarios después de la última app
             if i < len(APPS) - 1:
-                print("Esperando 5 minutos (300 segundos) antes de la siguiente app...")
-                await asyncio.sleep(300)
+                print("Esperando 2 minutos (120 segundos) antes de la siguiente app...")
+                await asyncio.sleep(120)
                 
         await browser.close()
 
