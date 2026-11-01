@@ -5,7 +5,7 @@ from playwright.async_api import async_playwright
 APPS = [
     "https://ahorro-programado-jardin-2025-2026-lpkqxauhd6ubq2tdwgm8up.streamlit.app/",
     "https://ahorro-programado-jardin-2026---2027-jvgnnbjed5rrmeprxhrf4k.streamlit.app/",
-    "https://banco-del-austro-7gvcwufjss7t4pngj3ymbz.streamlit.app/",
+    "https://movimientos-bancos-r7znoyvpfp8p9cvjevfptx.streamlit.app/",
     "https://calculadorasueldo-658v3aazzcta5b5x6gk2mk.streamlit.app/",
     "https://calificacion-de-riesgo-ubczu6cszzgwdqpcfmcjv8.streamlit.app/",
     "https://comparacion-ahorros-programados-mjaaaegmw4wzwlupfcohxe.streamlit.app/",
