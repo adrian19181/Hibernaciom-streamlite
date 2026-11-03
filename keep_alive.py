@@ -1,7 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
 
-# Enlaces directos a tus 13 aplicaciones de Streamlit
 APPS = [
     "https://ahorro-programado-jardin-2025-2026-lpkqxauhd6ubq2tdwgm8up.streamlit.app/",
     "https://ahorro-programado-jardin-2026---2027-jvgnnbjed5rrmeprxhrf4k.streamlit.app/",
@@ -18,38 +17,47 @@ APPS = [
     "https://tarjetas-de-credito-final-anufhdcyb3bpawg5guslrs.streamlit.app/"
 ]
 
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+
+async def procesar_app(context, url):
+    page = await context.new_page()
+    try:
+        print(f"Visitando: {url}")
+        await page.goto(url, timeout=45000, wait_until="domcontentloaded")
+        await page.wait_for_timeout(4000)
+        
+        # Selector insensible a mayúsculas/minúsculas para capturar cualquier variación del botón
+        boton_despertar = page.locator("button:has-text('get this app back up'), button:has-text('Yes, get this app back up!')")
+        
+        if await boton_despertar.count() > 0 and await boton_despertar.first.is_visible():
+            print(f"⚡ App dormida detectada en {url}. Despertando...")
+            await boton_despertar.first.click()
+            await page.wait_for_timeout(10000)
+            print(f"✅ App reactivada: {url}")
+        else:
+            print(f"🟢 App ya activa: {url}")
+            
+    except Exception as e:
+        print(f"❌ Error al procesar {url}: {e}")
+    finally:
+        await page.close()
+
 async def despertar_apps():
     async with async_playwright() as p:
-        # Se abre un navegador Chromium en modo invisible
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+        browser = await p.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-setuid-sandbox"]
+        )
+        context = await browser.new_context(user_agent=USER_AGENT)
         
-        for i, url in enumerate(APPS):
-            try:
-                print(f"Visitando: {url}")
-                await page.goto(url, timeout=60000)
-                await page.wait_for_timeout(5000) # 5 segundos para que la página cargue
-                
-                # Busca exactamente el botón azul de hibernación de Streamlit
-                boton_despertar = page.locator("button:has-text('Yes, get this app back up!')")
-                
-                if await boton_despertar.is_visible():
-                    print(f"App dormida detectada en {url}. Despertando...")
-                    await boton_despertar.click()
-                    await page.wait_for_timeout(15000) # 15 segundos para que el servidor de Streamlit reinicie
-                    print("App reactivada con éxito.")
-                else:
-                    print("La app ya estaba activa.")
-                    
-            except Exception as e:
-                print(f"Error al procesar {url}: {e}")
-            
-            # Espaciado de 2 minutos (120 segundos) entre aplicaciones
-            # La condición evita que espere 2 minutos innecesarios después de la última app
-            if i < len(APPS) - 1:
-                print("Esperando 2 minutos (120 segundos) antes de la siguiente app...")
-                await asyncio.sleep(120)
-                
+        # Procesa hasta 3 apps simultáneamente para evitar bloqueos y acelerar la ejecución
+        semaphore = asyncio.Semaphore(3)
+
+        async def sem_task(url):
+            async with semaphore:
+                await procesar_app(context, url)
+
+        await asyncio.gather(*(sem_task(url) for url in APPS))
         await browser.close()
 
 if __name__ == "__main__":
